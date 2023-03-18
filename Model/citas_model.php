@@ -1,0 +1,159 @@
+<?php
+
+class CitasModel {
+  private $db;
+
+  public function __construct() {
+    $this->db = new mysqli("localhost", "root", "", "citas");
+    if ($this->db->connect_error) {
+      die("Error de conexión: " . $this->db->connect_error);
+    }
+  }
+
+  public function insertarCita($fecha, $hora, $valor, $atendida, $paciente_id, $medico_identificacion) {
+    $query = "INSERT INTO Cita (Fecha, Hora, Valor, Atendida, Paciente_Identificacion, Medico_Identificacion) VALUES ('$fecha', '$hora', '$valor', '$atendida', '$paciente_id', '$medico_identificacion')";
+    $result = $this->db->query($query);
+    if ($result) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public function obtenerCitaId($id) {
+    if (!is_numeric($id)) {
+      return false;
+    }
+    $query = "SELECT * FROM Cita WHERE id = '$id'";
+    $result = $this->db->query($query);
+    if ($result->num_rows > 0) {
+      return $result->fetch_assoc();
+    } else {
+      return false;
+    }
+  }
+
+  public function obtenerCitas() {
+    $query = "SELECT * FROM Cita";
+    $result = $this->db->query($query);
+    if ($result->num_rows > 0) {
+      $citas = array();
+      while ($row = $result->fetch_assoc()) {
+        $citas[] = $row;
+      }
+      return $citas;
+    } else {
+      return false;
+    }
+  }
+
+  public function actualizarCita($id, $fecha, $hora, $valor, $atendida, $paciente_id, $medico_identificacion) {
+    $query = "UPDATE Cita SET Fecha = '$fecha', Hora = '$hora', Valor = '$valor', Atendida = '$atendida', Paciente_Identificacion = '$paciente_id', Medico_Identificacion = '$medico_identificacion' WHERE Fecha = '$id'";
+    $result = $this->db->query($query);
+    if ($result) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public function eliminarCita($id_cita) {
+    $query = "DELETE FROM Cita WHERE id = $id_cita";
+    $result = $this->db->query($query);
+    if ($result) {
+      return true;
+    } else {
+      return false;
+    }
+}
+
+  public function __destruct() {
+    $this->db->close();
+  }
+}
+
+// if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+//   $citasModel = new CitasModel();
+//   $citas = $citasModel->obtenerCitas();
+//   if ($citas) {
+//     header('Content-Type: application/json');
+//     echo json_encode($citas);
+//   } else {
+//     echo "No se encontraron citas.";
+//   }
+// }
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+  if(isset($_GET['id'])){
+    $id = $_GET['id'];
+    $citasModel = new CitasModel();
+    $cita = $citasModel->obtenerCitaId($id);
+    if ($cita) {
+      header('Content-Type: application/json');
+      echo json_encode($cita);
+    } else {
+      echo "No se encontró la cita con id $id.";
+    }
+  } else {
+    $citasModel = new CitasModel();
+    $citas = $citasModel->obtenerCitas();
+    if ($citas) {
+      header('Content-Type: application/json');
+      echo json_encode($citas);
+    } else {
+      echo "No se encontraron citas.";
+    }
+  }
+}
+// Verificar si se ha enviado una petición POST para insertar una nueva cita
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $data = json_decode(file_get_contents('php://input'), true);
+
+  if (!isset($data['valor'])) {
+    $data['valor'] = 0; // Asignar un valor predeterminado de 0
+  }
+
+  $citasModel = new CitasModel();
+
+  $inserted = $citasModel->insertarCita($data['fecha'], $data['hora'], $data['valor'], $data['atendida'], $data['paciente_id'], $data['medico_identificacion']);
+
+  if ($inserted) {
+    echo "Cita insertada correctamente.";
+  } else {
+    echo "Error al insertar la cita.";
+  }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+  $data = json_decode(file_get_contents('php://input'), true);
+
+  $citasModel = new CitasModel();
+
+  $updated = $citasModel->actualizarCita($data['id'], $data['fecha'], $data['hora'], $data['valor'], $data['atendida'], $data['paciente_id'], $data['medico_identificacion']);
+
+  if ($updated) {
+    echo "Cita actualizada correctamente.";
+  } else {
+    echo "Error al actualizar la cita.";
+  }
+}
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+  $data = json_decode(file_get_contents('php://input'), true);
+  
+  $citasModel = new CitasModel();
+  
+  $id_cita = $data['id'];
+  
+  $deleted = $citasModel->eliminarCita($id_cita);
+  
+  if ($deleted) {
+    echo "Cita eliminada correctamente.";
+  } else {
+    echo "Error al eliminar la cita.";
+  }
+}
+
+
+?>
