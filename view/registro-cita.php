@@ -27,10 +27,11 @@
         <option value="789">Dr. Luis Gómez</option>
       </select>
 
-      <label for="paciente">identificacion del paciente:</label>
+      <label for="paciente">Identificacion del paciente:</label>
       <input type="number" id="paciente" name="paciente" required>
-
-
+      
+      <label for="paciente">Nombre del paciente:</label>
+      <input type="text" id="N_paciente" name="paciente" required>
 
       <input id = "btn-agregar-cita" type="submit" value="Agendar" onclick="agregarCita(event)">
     </form>

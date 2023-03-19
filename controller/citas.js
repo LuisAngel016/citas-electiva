@@ -1,3 +1,6 @@
+
+
+
 // Función para obtener todas las citas de la base de datos
 function obtenerCitas(event) {
   event.preventDefault();
@@ -7,7 +10,12 @@ function obtenerCitas(event) {
     .then(response => response.json())
     .then(data => {
       // Aquí puedes manipular los datos obtenidos y actualizar la vista
-      console.log(data.data[0]);
+      // console.log(data.data[0]);
+      //Manejar el error si la data es undefined
+      if (data.data[0] === 'undefined') {
+        alert('La data es undefined')
+      }
+      
       // Obtenemos la referencia al cuerpo de la tabla
       const tbody = document.querySelector('tbody');
 
@@ -21,6 +29,7 @@ function obtenerCitas(event) {
             <td>${cita.Fecha}</td>
             <td>${cita.Hora}</td>
             <td>${cita.Paciente_Identificacion}</td>
+            <td>${cita.Nombre_paciente}</td>
             <td>${cita.Valor}</td>
           </tr>
         `;
@@ -42,6 +51,7 @@ function agregarCita(event) {
   const fecha = document.getElementById("fecha").value;
   const hora = document.getElementById("hora").value;
   const paciente_id = document.getElementById("paciente").value;
+  const n_paciente = document.getElementById("N_paciente").value;
   const medico_identificacion = document.getElementById("medico").value;
   const atendida = false
 
@@ -59,6 +69,7 @@ function agregarCita(event) {
       hora,
       atendida,
       paciente_id,
+      n_paciente,
       medico_identificacion
     })
   })
@@ -73,7 +84,7 @@ function agregarCita(event) {
 }
 
 // Función para actualizar una cita existente en la base de datos
-function actualizarCita(id, fecha, hora, paciente, medico) {
+function actualizarCita(id, fecha, hora, paciente, n_paciente, medico) {
   fetch('actualizar_cita.php', {
     method: 'PUT',
     headers: {
@@ -84,6 +95,7 @@ function actualizarCita(id, fecha, hora, paciente, medico) {
       fecha: fecha,
       hora: hora,
       paciente: paciente,
+      n_paciente: n_paciente,
       medico: medico
     })
   })

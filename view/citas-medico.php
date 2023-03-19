@@ -101,6 +101,7 @@
           <th>Fecha de la cita</th>
           <th>Hora de la cita</th>
           <th>Identificacion del paciente</th>
+          <th>Nombre del paciente</th>
           <th>Valor de la consulta</th>
         </tr>
       </thead>
@@ -109,5 +110,5 @@
       </tbody>
     </table>
   </body>
-  <script src="../controller/citas.js"></script>
+  <script type="module" src="../controller/citas.js"></script>
 </html>

@@ -10,8 +10,8 @@ class CitasModel {
     }
   }
 
-  public function insertarCita($fecha, $hora, $valor, $atendida, $paciente_id, $medico_identificacion) {
-    $query = "INSERT INTO Cita (Fecha, Hora, Valor, Atendida, Paciente_Identificacion, Medico_Identificacion) VALUES ('$fecha', '$hora', '$valor', '$atendida', '$paciente_id', '$medico_identificacion')";
+  public function insertarCita($fecha, $hora, $valor, $atendida, $paciente_id, $n_paciente, $medico_identificacion) {
+    $query = "INSERT INTO Cita (Fecha, Hora, Valor, Atendida, Paciente_Identificacion, Nombre_paciente, Medico_Identificacion) VALUES ('$fecha', '$hora', '$valor', '$atendida', '$paciente_id', '$n_paciente', '$medico_identificacion')";
     $result = $this->db->query($query);
     if ($result) {
       return true;
@@ -20,11 +20,11 @@ class CitasModel {
     }
   }
 
-  public function obtenerCitasPorMedico($Medico_Identificacion) {
-    if (!is_numeric($Medico_Identificacion)) {
+  public function obtenerCitasPorMedico($medico_identificacion) {
+    if (!is_numeric($medico_identificacion)) {
       return false;
     }
-    $query = "SELECT * FROM Cita WHERE Medico_Identificacion = '$Medico_Identificacion'";
+    $query = "SELECT * FROM Cita WHERE Medico_Identificacion = '$medico_identificacion'";
     $result = $this->db->query($query);
     if ($result->num_rows > 0) {
       $citas = array();
@@ -52,8 +52,8 @@ class CitasModel {
     }
   }
 
-  public function actualizarCita($id, $fecha, $hora, $valor, $atendida, $paciente_id, $medico_identificacion) {
-    $query = "UPDATE Cita SET Fecha = '$fecha', Hora = '$hora', Valor = '$valor', Atendida = '$atendida', Paciente_Identificacion = '$paciente_id', Medico_Identificacion = '$medico_identificacion' WHERE Fecha = '$id'";
+  public function actualizarCita($id, $fecha, $hora, $valor, $atendida, $paciente_id, $n_paciente, $medico_identificacion) {
+    $query = "UPDATE Cita SET Fecha = '$fecha', Hora = '$hora', Valor = '$valor', Atendida = '$atendida', Paciente_Identificacion = '$paciente_id', Nombre_paciente = '$n_paciente', Medico_Identificacion = '$medico_identificacion' WHERE Fecha = '$id'";
     $result = $this->db->query($query);
     if ($result) {
       return true;
@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   $citasModel = new CitasModel();
 
-  $inserted = $citasModel->insertarCita($data['fecha'], $data['hora'], $data['valor'], $data['atendida'], $data['paciente_id'], $data['medico_identificacion']);
+  $inserted = $citasModel->insertarCita($data['fecha'], $data['hora'], $data['valor'], $data['atendida'], $data['paciente_id'], $data['n_paciente'], $data['medico_identificacion']);
 
   if ($inserted) {
     http_response_code(201);
@@ -140,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
 
   $citasModel = new CitasModel();
 
-  $updated = $citasModel->actualizarCita($data['id'], $data['fecha'], $data['hora'], $data['valor'], $data['atendida'], $data['paciente_id'], $data['medico_identificacion']);
+  $updated = $citasModel->actualizarCita($data['id'], $data['fecha'], $data['hora'], $data['valor'], $data['atendida'], $data['paciente_id'], $data['n_paciente'], $data['medico_identificacion']);
 
   if ($updated) {
     header('Content-Type: application/json');
