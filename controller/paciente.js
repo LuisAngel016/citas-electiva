@@ -12,18 +12,28 @@ function obtenerPacientes() {
   }
   
   // Función para agregar un nuevo paciente a la base de datos
-  function agregarPaciente(identificacion, nombre, apellido, activo, regimen) {
-    fetch('agregar_paciente.php', {
+  function agregarPaciente(event) {
+
+    event.preventDefault();
+
+    const identificacion = document.getElementById("identificacion").value;
+    const nombre = document.getElementById("nombre").value;
+    const apellido = document.getElementById("apellido").value;
+    const regimen = document.getElementById("regimen").value;
+    const activo = true
+
+
+    fetch('http://localhost/citas-electiva/Model/paciente_model.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        identificacion: identificacion,
-        nombre: nombre,
-        apellido: apellido,
-        activo: activo,
-        regimen: regimen
+        identificacion,
+        nombre,
+        apellido,
+        activo,
+        regimen
       })
     })
       .then(response => response.json())

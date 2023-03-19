@@ -61,7 +61,31 @@ body {
     cursor: pointer;
   }
   
-  .formulario input[type="submit"]:hover {
+  /* .formulario input[type="submit"]:hover {
     background-color: #0069d9;
+  } */
+  
+
+  .container-index {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
   }
   
+  .link-index {
+    margin: 0 20px;
+    padding: 10px 20px;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    color: #333;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .link-index:hover {
+    background-color: #333;
+    color: #fff;
+  }

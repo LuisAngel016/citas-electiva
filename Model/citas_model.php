@@ -20,18 +20,23 @@ class CitasModel {
     }
   }
 
-  public function obtenerCitaId($id) {
-    if (!is_numeric($id)) {
+  public function obtenerCitasPorMedico($Medico_Identificacion) {
+    if (!is_numeric($Medico_Identificacion)) {
       return false;
     }
-    $query = "SELECT * FROM Cita WHERE id = '$id'";
+    $query = "SELECT * FROM Cita WHERE Medico_Identificacion = '$Medico_Identificacion'";
     $result = $this->db->query($query);
     if ($result->num_rows > 0) {
-      return $result->fetch_assoc();
+      $citas = array();
+      while ($row = $result->fetch_assoc()) {
+        $citas[] = $row;
+      }
+      return $citas;
     } else {
       return false;
     }
   }
+
 
   public function obtenerCitas() {
     $query = "SELECT * FROM Cita";
@@ -84,16 +89,18 @@ class CitasModel {
 // }
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-  if(isset($_GET['id'])){
-    $id = $_GET['id'];
+  // Debe pasarse en el link el id del medico http://localhost/citas-electiva/Model/citas_model.php?medico_identificacion=12345
+  if(isset($_GET['medico_identificacion'])){
+    $identificacion = $_GET['medico_identificacion'];
     $citasModel = new CitasModel();
-    $cita = $citasModel->obtenerCitaId($id);
-    if ($cita) {
-      $response = array('status' => 'success', 'data' => $cita);
+    $citas = $citasModel->obtenerCitasPorMedico($identificacion);
+    if ($citas) {
+      $response = array('status' => 'success', 'data' => $citas);
     } else {
-      $response = array('status' => 'error', 'message' => "No se encontró la cita con id $id.");
+      $response = array('status' => 'error', 'message' => "No se encontraron citas para el médico con identificación $identificacion.");
     }
-  } else {
+  }
+ else {
     $citasModel = new CitasModel();
     $citas = $citasModel->obtenerCitas();
     if ($citas) {

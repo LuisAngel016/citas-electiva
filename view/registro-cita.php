@@ -9,7 +9,7 @@
   <title>Citas</title>
 </head>
 
-<body>
+<body onload="obtenerMedicos()">
   <div class="container">
     <h1>Agendar Cita</h1>
     <form class="formulario" id="formulario-cita">
@@ -30,12 +30,14 @@
       <label for="paciente">identificacion del paciente:</label>
       <input type="number" id="paciente" name="paciente" required>
 
-      
 
-      <input type="submit" value="Agendar" onclick="agregarCita(event)">
+
+      <input id = "btn-agregar-cita" type="submit" value="Agendar" onclick="agregarCita(event)">
     </form>
   </div>
   <script src="../controller/citas.js"></script>
+  <script src="../controller/medico.js"></script>
+  
 </body>
 
 </html>
