@@ -20,17 +20,11 @@ function obtenerCitas() {
     const hora = document.getElementById("hora").value;
     const paciente_id = document.getElementById("paciente").value;
     const medico_identificacion = document.getElementById("medico").value;
-    const atentida = false
+    const atendida = false
 
-    const datos = {
-        fecha,
-        hora,
-        atentida,
-        paciente_id,
-        medico_identificacion
-    }
+    
 
-    console.log("datos")
+    
 
     fetch('http://localhost/citas-electiva/Model/citas_model.php', {
       method: 'POST',
@@ -38,7 +32,11 @@ function obtenerCitas() {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        datos
+        fecha,
+        hora,
+        atendida,
+        paciente_id,
+        medico_identificacion
       })
     })
       .then(response => response.json())

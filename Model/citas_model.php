@@ -89,22 +89,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $citasModel = new CitasModel();
     $cita = $citasModel->obtenerCitaId($id);
     if ($cita) {
-      header('Content-Type: application/json');
-      echo json_encode($cita);
+      $response = array('status' => 'success', 'data' => $cita);
     } else {
-      echo "No se encontró la cita con id $id.";
+      $response = array('status' => 'error', 'message' => "No se encontró la cita con id $id.");
     }
   } else {
     $citasModel = new CitasModel();
     $citas = $citasModel->obtenerCitas();
     if ($citas) {
-      header('Content-Type: application/json');
-      echo json_encode($citas);
+      $response = array('status' => 'success', 'data' => $citas);
     } else {
-      echo "No se encontraron citas.";
+      $response = array('status' => 'error', 'message' => 'No se encontraron citas.');
     }
   }
+
+  header('Content-Type: application/json');
+  echo json_encode($response);
 }
+
 // Verificar si se ha enviado una petición POST para insertar una nueva cita
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $data = json_decode(file_get_contents('php://input'), true);
@@ -118,9 +120,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $inserted = $citasModel->insertarCita($data['fecha'], $data['hora'], $data['valor'], $data['atendida'], $data['paciente_id'], $data['medico_identificacion']);
 
   if ($inserted) {
-    echo "Cita insertada correctamente.";
+    http_response_code(201);
+    echo json_encode(array('message' => 'Cita insertada correctamente.'));
   } else {
-    echo "Error al insertar la cita.";
+    http_response_code(400);
+    echo json_encode(array('message' => 'Error al insertar la cita.'));
   }
 }
 
@@ -132,11 +136,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
   $updated = $citasModel->actualizarCita($data['id'], $data['fecha'], $data['hora'], $data['valor'], $data['atendida'], $data['paciente_id'], $data['medico_identificacion']);
 
   if ($updated) {
-    echo "Cita actualizada correctamente.";
+    header('Content-Type: application/json');
+    echo json_encode(array('message' => 'Cita actualizada correctamente.'));
   } else {
-    echo "Error al actualizar la cita.";
+    header('Content-Type: application/json');
+    echo json_encode(array('message' => 'Error al actualizar la cita.'));
   }
 }
+
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
@@ -149,11 +156,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
   $deleted = $citasModel->eliminarCita($id_cita);
   
   if ($deleted) {
-    echo "Cita eliminada correctamente.";
+    header('Content-Type: application/json');
+    echo json_encode(array('mensaje' => 'Cita eliminada correctamente.'));
   } else {
-    echo "Error al eliminar la cita.";
+    header('Content-Type: application/json');
+    echo json_encode(array('mensaje' => 'Error al eliminar la cita.'));
   }
 }
+
 
 
 ?>
